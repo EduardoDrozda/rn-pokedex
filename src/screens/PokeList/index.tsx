@@ -1,4 +1,4 @@
-import { Header } from "@shared/components";
+import { Header, Input } from "@shared/components";
 import { useState } from "react";
 import { FlatList } from "react-native";
 import * as S from "./styles";
@@ -17,6 +17,14 @@ export function PokeList() {
               Search for Pokémon by name or using the {"\n"}
               National Pokédex number.
             </S.Subtitle>
+            <S.InputContainer>
+              <Input
+                placeholder="What Pokémon are you looking for?"
+                icon="search"
+                returnKeyLabel="Done"
+                returnKeyType="done"
+              />
+            </S.InputContainer>
           </>
         }
         contentContainerStyle={{

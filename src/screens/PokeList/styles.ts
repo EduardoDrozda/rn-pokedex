@@ -15,9 +15,14 @@ export const Title = styled.Text`
 
 export const Subtitle = styled.Text`
   ${({ theme }) => css`
-    color: ${theme.COLORS.GRAY};
+    color: ${theme.COLORS.TEXT};
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${theme.FONT_SIZE.MD}px;
     margin-top: 20px;
   `}
 `;
+
+export const InputContainer = styled.View`
+  margin-top: 30px;
+
+`
