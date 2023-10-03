@@ -1,15 +1,29 @@
 import { PokemonCard } from "@screens/PokeList/components";
 import { IPokemon } from "@screens/PokeList/interfaces";
 import { Header, Input, Loading } from "@shared/components";
+import debounce from "lodash.debounce";
+import { useMemo } from "react";
 import { FlatList } from "react-native";
 import * as S from "./styles";
 
 type Props = {
   isLoading: boolean;
   pokemons: IPokemon[];
+  setSearchPokemon: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export function PokeListLayout({ isLoading, pokemons }: Props) {
+export function PokeListLayout({
+  isLoading,
+  pokemons,
+  setSearchPokemon,
+}: Props) {
+  const handleSearch = useMemo(() => {
+    return debounce(handleSearchPokemon, 500);
+  }, []);
+
+  function handleSearchPokemon(v: string) {
+    setSearchPokemon(v);
+  }
   return (
     <S.Container>
       <Header />
@@ -24,6 +38,7 @@ export function PokeListLayout({ isLoading, pokemons }: Props) {
           icon="search"
           returnKeyLabel="Done"
           returnKeyType="done"
+          onChangeText={handleSearch}
         />
       </S.InputContainer>
       <S.ListContainer>
@@ -32,7 +47,7 @@ export function PokeListLayout({ isLoading, pokemons }: Props) {
         ) : (
           <FlatList
             contentContainerStyle={{
-              paddingBottom: 40 
+              paddingBottom: 40,
             }}
             data={pokemons}
             initialNumToRender={5}
