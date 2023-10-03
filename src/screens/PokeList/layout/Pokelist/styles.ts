@@ -2,6 +2,7 @@ import { css, styled } from "styled-components/native";
 
 export const Container = styled.View`
   flex: 1;
+  padding: 0 20px;
 `;
 
 export const Title = styled.Text`
@@ -24,5 +25,8 @@ export const Subtitle = styled.Text`
 
 export const InputContainer = styled.View`
   margin-top: 30px;
+`;
 
-`
+export const ListContainer = styled.View`
+  margin-top: 30px;
+`;
