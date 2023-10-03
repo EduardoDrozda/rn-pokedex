@@ -1,11 +1,7 @@
-
 import { PokeListContainer } from "./container";
-import { PokeListContextProvider, usePokemons } from "./context";
-
+import { PokeListContextProvider } from "./context";
 
 export function PokeList() {
-  const { isLoading, pokemons } = usePokemons();
-
   return (
     <PokeListContextProvider>
       <PokeListContainer />

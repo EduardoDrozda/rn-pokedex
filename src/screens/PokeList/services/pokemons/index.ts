@@ -3,8 +3,11 @@ import { api } from "@shared/services";
 
 const ENDPOINT = "pokemon";
 
-export async function getPokemons(): Promise<IPokemonRequest> {
-  const { data } = await api.get(ENDPOINT);
+export async function getPokemons(
+  offset?: number,
+  limit?: number
+): Promise<IPokemonRequest> {
+  const { data } = await api.get(`${ENDPOINT}?offset=${offset}&limit=${limit}`);
   return data;
 }
 

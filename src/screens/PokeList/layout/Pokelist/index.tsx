@@ -3,27 +3,26 @@ import { IPokemon } from "@screens/PokeList/interfaces";
 import { Header, Input, Loading } from "@shared/components";
 import debounce from "lodash.debounce";
 import { useMemo } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import * as S from "./styles";
 
 type Props = {
   isLoading: boolean;
   pokemons: IPokemon[];
-  setSearchPokemon: React.Dispatch<React.SetStateAction<string>>;
+  handleSearchPokemon: (v: string) => void;
+  handleOffset: () => void;
 };
 
 export function PokeListLayout({
   isLoading,
   pokemons,
-  setSearchPokemon,
+  handleSearchPokemon,
+  handleOffset,
 }: Props) {
   const handleSearch = useMemo(() => {
     return debounce(handleSearchPokemon, 500);
   }, []);
 
-  function handleSearchPokemon(v: string) {
-    setSearchPokemon(v);
-  }
   return (
     <S.Container>
       <Header />
@@ -42,22 +41,27 @@ export function PokeListLayout({
         />
       </S.InputContainer>
       <S.ListContainer>
-        {isLoading ? (
-          <Loading isFlex={false} width={50} height={50} />
-        ) : (
-          <FlatList
-            contentContainerStyle={{
-              paddingBottom: 40,
-            }}
-            data={pokemons}
-            initialNumToRender={5}
-            keyExtractor={(pokemon) => pokemon.id.toString()}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item: pokemon }) => {
-              return <PokemonCard data={pokemon} />;
-            }}
-          />
-        )}
+        <FlatList
+          contentContainerStyle={{
+            paddingBottom: 40,
+          }}
+          data={pokemons}
+          initialNumToRender={5}
+          keyExtractor={(pokemon) => pokemon.id.toString()}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item: pokemon }) => {
+            return <PokemonCard data={pokemon} />;
+          }}
+          onEndReached={handleOffset}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={() =>
+            isLoading && (
+              <View style={{ marginTop: 10 }}>
+                <Loading isFlex={false} width={50} height={50} />
+              </View>
+            )
+          }
+        />
       </S.ListContainer>
     </S.Container>
   );

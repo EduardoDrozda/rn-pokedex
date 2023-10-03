@@ -18,7 +18,8 @@ type PropsPokeListContext = {
   pokemons: IPokemon[];
   isLoading: boolean;
   searchPokemon: string;
-  setSearchPokemon: React.Dispatch<React.SetStateAction<string>>;
+  handleSearchPokemon: (v: string) => void;
+  handleOffset: () => void;
 };
 
 const PokeListContext = createContext<PropsPokeListContext>(
@@ -29,14 +30,30 @@ type Props = {
   children: ReactNode;
 };
 
+const DEFAULT_VALUE = {
+  isLoading: false,
+  pokemons: [],
+  searchPokemon: "",
+  isResetList: false,
+  offSet: 0,
+  limit: 5,
+};
+
 const PokeListContextProvider: React.FC<Props> = ({ children }: Props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [pokemons, setPokemons] = useState<IPokemon[]>([]);
-  const [searchPokemon, setSearchPokemon] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(DEFAULT_VALUE.isLoading);
+  const [pokemons, setPokemons] = useState<IPokemon[]>(DEFAULT_VALUE.pokemons);
+  const [searchPokemon, setSearchPokemon] = useState<string>(
+    DEFAULT_VALUE.searchPokemon
+  );
+  const [offset, setOffset] = useState<number>(DEFAULT_VALUE.offSet);
+  const [isResetList, setIsResetList] = useState<boolean>(
+    DEFAULT_VALUE.isResetList
+  );
 
   const handlePokemons = useCallback(async () => {
     try {
-      const { results } = await getPokemons();
+      setIsLoading(true);
+      const { results } = await getPokemons(offset, DEFAULT_VALUE.limit);
 
       await Promise.all(
         results.map(async ({ url }: IPokeBasicInfo) => {
@@ -44,15 +61,21 @@ const PokeListContextProvider: React.FC<Props> = ({ children }: Props) => {
         })
       )
         .then((res) => {
-          setPokemons([...res]);
+          if (isResetList) {
+            setPokemons([...res]);
+            return;
+          }
+
+          setPokemons([...pokemons, ...res]);
         })
         .finally(() => {
-          setIsLoading(false);
+          setIsLoading(DEFAULT_VALUE.isLoading);
+          setIsResetList(DEFAULT_VALUE.isResetList);
         });
     } catch (error) {
       Alert.alert("Oops, something went wrong, try again in a moment");
     }
-  }, []);
+  }, [pokemons]);
 
   const handlePokemonBySearch = useCallback(async (search: string) => {
     try {
@@ -66,6 +89,18 @@ const PokeListContextProvider: React.FC<Props> = ({ children }: Props) => {
     }
   }, []);
 
+  const handleSearchPokemon = (v: string) => {
+    setSearchPokemon(v);
+    setOffset(DEFAULT_VALUE.offSet);
+    setIsResetList(true);
+  };
+
+  const handleOffset = () => {
+    if (searchPokemon.length) return;
+    const newOffset = offset + DEFAULT_VALUE.limit;
+    setOffset(newOffset);
+  };
+
   useLayoutEffect(() => {
     if (!searchPokemon.length) {
       handlePokemons();
@@ -74,15 +109,16 @@ const PokeListContextProvider: React.FC<Props> = ({ children }: Props) => {
 
     handlePokemonBySearch(searchPokemon);
     return;
-  }, [searchPokemon]);
+  }, [searchPokemon, offset]);
 
   return (
     <PokeListContext.Provider
       value={{
-        pokemons: pokemons,
-        isLoading: isLoading,
-        searchPokemon: searchPokemon,
-        setSearchPokemon: setSearchPokemon,
+        pokemons,
+        isLoading,
+        searchPokemon,
+        handleSearchPokemon,
+        handleOffset,
       }}
     >
       {children}
