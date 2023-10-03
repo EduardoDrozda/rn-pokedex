@@ -1,4 +1,4 @@
-import { usePokemons } from "@screens/PokeList/context/PokeListContext";
+import { usePokemons } from "@screens/PokeList/context";
 import { PokeListLayout } from "@screens/PokeList/layout/Pokelist";
 
 export function PokeListContainer() {

@@ -29,4 +29,5 @@ export const InputContainer = styled.View`
 
 export const ListContainer = styled.View`
   margin-top: 30px;
+  flex: 1;
 `;

@@ -1,3 +1,4 @@
+import { PokemonCard } from "@screens/PokeList/components";
 import { IPokemon } from "@screens/PokeList/interfaces";
 import { Header, Input, Loading } from "@shared/components";
 import { FlatList } from "react-native";
@@ -31,12 +32,15 @@ export function PokeListLayout({ isLoading, pokemons }: Props) {
         ) : (
           <FlatList
             contentContainerStyle={{
-              paddingHorizontal: 20,
+              paddingBottom: 40 
             }}
             data={pokemons}
+            initialNumToRender={5}
             keyExtractor={(pokemon) => pokemon.id.toString()}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item: pokemon }) => <></>}
+            renderItem={({ item: pokemon }) => {
+              return <PokemonCard data={pokemon} />;
+            }}
           />
         )}
       </S.ListContainer>

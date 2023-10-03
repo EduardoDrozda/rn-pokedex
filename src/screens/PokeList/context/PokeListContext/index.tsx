@@ -37,7 +37,9 @@ const PokeListContextProvider: React.FC<Props> = ({ children }: Props) => {
         return await getPokemonByUrl(url);
       })
     )
-      .then((res) => setPokemons([...res]))
+      .then((res) => {
+        setPokemons([...res]);
+      })
       .finally(() => {
         setIsLoading(false);
       });

@@ -10,6 +10,8 @@ import { ThemeProvider } from "styled-components/native";
 import { Routes } from "./src/routes";
 import theme from "./src/theme";
 
+import 'react-native-gesture-handler';
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
